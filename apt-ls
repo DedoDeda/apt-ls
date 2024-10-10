@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "$#" -lt 1 ]
+then
+	echo "Usage: $0 <last n days>."
+	exit 1
+fi
+
+grep " install " /var/log/dpkg.log | awk -v days="$1" '$1 >= strftime("%Y-%m-%d", systime() - days * 86400) {print $4}' | xargs apt-mark showmanual | sort -u
+
